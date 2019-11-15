@@ -3,6 +3,7 @@
 #ifndef BINARYTREE_H
 #define BINARYTREE_H
 #include <iostream>
+#include <algorithm>    //This is to allow use of max command in treeHeight method.
 using namespace std;
 
 //Inserts a new node into the tree with the value in the TreeNode pointer.
@@ -28,6 +29,8 @@ private:
   void displayInOrder(TreeNode *) const;
   void displayPreOrder(TreeNode *) const;
   void displayPostOrder(TreeNode *) const;
+  int treeHeight(TreeNode *);
+
 
 
 public:
@@ -41,8 +44,10 @@ public:
 
   //Binary tree operations
   void insertNode(int value);
-  bool searchNode(int value);
+  void searchNode(int value);
   void remove(int value);
+  //int treeHeight(TreeNode *);
+
 
   void displayInOrder() const
   {
@@ -57,6 +62,11 @@ public:
   void displayPostOrder() const
   {
     displayPostOrder(root);
+  }
+
+  int treeHeight()
+  {
+    treeHeight(root);
   }
 
 };
@@ -109,26 +119,40 @@ void binaryTree::destroySubTree(TreeNode *nodePtr)
 }
 
 //Checks to see if the a value is in the the tree. If it is it will return true.
-bool binaryTree::searchNode(int num)
+void binaryTree::searchNode(int num)
 {
     TreeNode *nodePtr = root;
+    bool valueInTree = false;
 
     while(nodePtr)
     {
         if(nodePtr->value == num)
         {
-          return true;
+          valueInTree = true;
+          break;
         }
         else if(num < nodePtr->value)
         {
-          nodePtr = nodePtr->right;
+          cout<<"We are looking for the value "<<num<<" which is less than current node's value ";
+          cout<<nodePtr->value<<" so we check the left child."<<endl;
+          nodePtr = nodePtr->left;
         }
         else
         {
+          cout<<"We are looking for the value "<<num<<" which is greater than the current node's value ";
+          cout<<nodePtr->value<<" so we check the right child."<<endl;
           nodePtr = nodePtr->right;
         }
 
-        return false;
+    }
+
+    if(valueInTree == true)
+    {
+      cout<<"We have found the value "<<nodePtr->value<<" in the tree."<<endl;
+    }
+    else
+    {
+      cout<<"We have checked the entire tree and "<<num<<" is not in it."<<endl;
     }
 }
 
@@ -215,6 +239,7 @@ void binaryTree::displayPreOrder(TreeNode *nodePtr) const
     }
 }
 
+//Display postorder travel.
 void binaryTree::displayPostOrder(TreeNode *nodePtr) const
 {
     if(nodePtr)
@@ -223,5 +248,24 @@ void binaryTree::displayPostOrder(TreeNode *nodePtr) const
       displayPostOrder(nodePtr->right);
       cout << nodePtr->value << endl;
     }
+}
+
+//Calling treeHeight recursively to find the height of the tree.
+int binaryTree::treeHeight(TreeNode *nodePtr)
+{
+  //cout<<"Being called";
+  if (nodePtr == nullptr)
+  {
+    //cout<<"Being called";
+    return 0;
+  }
+  else
+  {
+    int lb = treeHeight(nodePtr->left);
+    int rb = treeHeight(nodePtr->right);
+    return 1 + max(lb,rb);
+    //return max(treeHeight(nodePtr->left),treeHeight(nodePtr->right))+1;
+  }
+
 }
 #endif
