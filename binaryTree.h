@@ -1,13 +1,66 @@
-//Author of this code:Brent Moran
+//Author of this code: Brent Moran
 
-#ifndef BINARYSEARCHTREE_H
-#define BINARYSEARCHTREE_H
-#inlclude <iostream>
+#ifndef BINARYTREE_H
+#define BINARYTREE_H
+#include <iostream>
 using namespace std;
 
 //Inserts a new node into the tree with the value in the TreeNode pointer.
 //That value is then inserted into the tree.
-void bstWithMenu::insert(TreeNode *&nodePtr,  TreeNode *&newNode)
+
+class binaryTree
+{
+private:
+  struct TreeNode
+  {
+      int value;    //Value in the node
+      TreeNode *left;   //Pointer to left child
+      TreeNode *right;   //Pointer to right child
+  };
+
+  TreeNode *root;   //Pointer to root node
+
+  //Private member functions
+  void insert(TreeNode *&, TreeNode *&);
+  void destroySubTree(TreeNode *);
+  void deleteNode(int value, TreeNode *&);
+  void makeDeletion(TreeNode *&);
+  void displayInOrder(TreeNode *) const;
+  void displayPreOrder(TreeNode *) const;
+  void displayPostOrder(TreeNode *) const;
+
+
+public:
+  //Constructor
+  binaryTree()
+  {root = nullptr;}
+
+  //Destructor
+  ~binaryTree()
+  {destroySubTree(root);}
+
+  //Binary tree operations
+  void insertNode(int value);
+  bool searchNode(int value);
+  void remove(int value);
+
+  void displayInOrder() const
+  {
+    displayInOrder(root);
+  }
+
+  void displayPreOrder() const
+  {
+    displayPreOrder(root);
+  }
+
+  void displayPostOrder() const
+  {
+    displayPostOrder(root);
+  }
+
+};
+void binaryTree::insert(TreeNode *&nodePtr,  TreeNode *&newNode)
 {
     if(nodePtr == nullptr)
     {
@@ -24,7 +77,7 @@ void bstWithMenu::insert(TreeNode *&nodePtr,  TreeNode *&newNode)
 }
 
 //Creates new node and stores a num in it. It then passes that value to insert function.
-void bstWithMenu::insertNode(int num)
+void binaryTree::insertNode(int num)
 {
     TreeNode *newNode = nullptr;    //Pointer to a new node.
 
@@ -34,11 +87,11 @@ void bstWithMenu::insertNode(int num)
     newNode->value = num;
     newNode->left = newNode->right = nullptr;
 
-    insert(root, newNode)   //Insert new node.
+    insert(root, newNode);   //Insert new node.
 }
 
 //Called by the destructor to delete all nodes in the tree.
-void bstWithMenu::destroySubTree(TreeNode *nodePtr)
+void binaryTree::destroySubTree(TreeNode *nodePtr)
 {
     if(nodePtr)
     {
@@ -56,7 +109,7 @@ void bstWithMenu::destroySubTree(TreeNode *nodePtr)
 }
 
 //Checks to see if the a value is in the the tree. If it is it will return true.
-bool bstWithMenu::searchNode(int num)
+bool binaryTree::searchNode(int num)
 {
     TreeNode *nodePtr = root;
 
@@ -80,13 +133,13 @@ bool bstWithMenu::searchNode(int num)
 }
 
 //Calls deleteNode to delete the node with the value passes into deleteNode.
-void bstWithMenu::remove(int num)
+void binaryTree::remove(int num)
 {
     deleteNode(num, root);
 }
 
 //Deletes the node with value member same as num.
-void bstWithMenu::deleteNode(int num, TreeNode *&nodePtr)
+void binaryTree::deleteNode(int num, TreeNode *&nodePtr)
 {
     if(num < nodePtr->value)
     {
@@ -102,7 +155,7 @@ void bstWithMenu::deleteNode(int num, TreeNode *&nodePtr)
     }
 }
 
-void bstWithMenu::makeDeletion(TreeNode *&nodePtr)
+void binaryTree::makeDeletion(TreeNode *&nodePtr)
 {
     //Temp pointer to use in reattaching left subtree.
     TreeNode *tempNodePtr = nullptr;
@@ -141,7 +194,7 @@ void bstWithMenu::makeDeletion(TreeNode *&nodePtr)
 }
 
 //Display in order travel.
-void bstWithMenu::displayInOrder(TreeNode *nodePtr) const
+void binaryTree::displayInOrder(TreeNode *nodePtr) const
 {
     if(nodePtr)
     {
@@ -151,18 +204,18 @@ void bstWithMenu::displayInOrder(TreeNode *nodePtr) const
     }
 }
 
-//Display pre order travel.
-void bstWithMenu::displeyPreOrder(TreeNode *nodePtr) const
+//Display preorder travel.
+void binaryTree::displayPreOrder(TreeNode *nodePtr) const
 {
     if(nodePtr)
     {
       cout << nodePtr->value << endl;
-      displeyPreOrder(nodePtr->left);
-      displeyPreOrder(nodePtr->right);
+      displayPreOrder(nodePtr->left);
+      displayPreOrder(nodePtr->right);
     }
 }
 
-void bstWithMenu::displayPostOrder(TreeNode *nodePtr) const
+void binaryTree::displayPostOrder(TreeNode *nodePtr) const
 {
     if(nodePtr)
     {
@@ -171,3 +224,4 @@ void bstWithMenu::displayPostOrder(TreeNode *nodePtr) const
       cout << nodePtr->value << endl;
     }
 }
+#endif
