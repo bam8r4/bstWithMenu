@@ -6,24 +6,23 @@ using namespace std;
 
 int main()
 {
+  int arr[10] = {30, 10, 45, 38, 20, 50, 25, 33, 8, 12}; //Array given to us to by instructor to populate our tree.
   binaryTree tree;
 
-  tree.insertNode(5);
-  tree.insertNode(8);
-  tree.insertNode(29);
-  tree.insertNode(3);
-  tree.insertNode(1);
 
-  tree.displayInOrder();
+  for(int i = 0; i < 10; i++)
+  {
+    tree.insertNode(arr[i]);
+  }
 
-  tree.remove(8);
-
-  tree.displayInOrder();
-  cout<<"****************************"<<endl;
-
-  tree.displayPreOrder();
-  cout<<"\n\n";
-  tree.displayPostOrder();
+  //Assignment instructions
+  /*
+  Must be menu driven.
+  Create binary search tree with the given array.
+  Display using all methods. (in,post,pre)order.
+  Call searchNode for keys 38 and 9. Display update as search goes on.
+  Call deleteNode on key 10.
+  */
 
 
 }
