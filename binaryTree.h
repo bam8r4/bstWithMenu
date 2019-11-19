@@ -14,22 +14,27 @@ class binaryTree
 private:
   struct TreeNode
   {
-      int value;    //Value in the node
-      TreeNode *left;   //Pointer to left child
+      int height;        //Level in which the node is located.
+      int value;         //Value in the node
+      TreeNode *left;    //Pointer to left child
       TreeNode *right;   //Pointer to right child
   };
 
   TreeNode *root;   //Pointer to root node
+  int maxHeight = 0;  //We are assuming the tree has nodes. This value will be reset when the height function and delete functions are called.
+  int *maxHeightPtr = &maxHeight;
 
   //Private member functions
-  void insert(TreeNode *&, TreeNode *&);
+  void insert(TreeNode *&, TreeNode *&, int);
   void destroySubTree(TreeNode *);
   void deleteNode(int value, TreeNode *&);
   void makeDeletion(TreeNode *&);
   void displayInOrder(TreeNode *) const;
   void displayPreOrder(TreeNode *) const;
   void displayPostOrder(TreeNode *) const;
-  int treeHeight(TreeNode *);
+  void treeHeight(TreeNode *, int *);
+  void heightSetter(TreeNode *, int);
+  void heightSetterDriver(int);
 
 
 
@@ -43,10 +48,10 @@ public:
   {destroySubTree(root);}
 
   //Binary tree operations
-  void insertNode(int value);
+  void insertNode(int value, int level);
   void searchNode(int value);
   void remove(int value);
-  //int treeHeight(TreeNode *);
+  void getMaxHeight();  //This just returns the value of max height so it can be printed.
 
 
   void displayInOrder() const
@@ -66,28 +71,31 @@ public:
 
   int treeHeight()
   {
-    treeHeight(root);
+    treeHeight(root, maxHeightPtr);
   }
 
 };
-void binaryTree::insert(TreeNode *&nodePtr,  TreeNode *&newNode)
+void binaryTree::insert(TreeNode *&nodePtr,  TreeNode *&newNode, int level)
 {
     if(nodePtr == nullptr)
     {
       nodePtr = newNode;    //Insert the node.
+      nodePtr->height = level;
     }
     else if(newNode->value < nodePtr->value)
     {
-      insert(nodePtr->left, newNode);   //Search the left branch.
+      level = level + 1;
+      insert(nodePtr->left, newNode, level);   //Search the left branch.
     }
     else
     {
-      insert(nodePtr->right, newNode);    //Search the right branch.
+      level = level + 1;
+      insert(nodePtr->right, newNode, level);    //Search the right branch.
     }
 }
 
 //Creates new node and stores a num in it. It then passes that value to insert function.
-void binaryTree::insertNode(int num)
+void binaryTree::insertNode(int num, int level = 1)
 {
     TreeNode *newNode = nullptr;    //Pointer to a new node.
 
@@ -97,7 +105,7 @@ void binaryTree::insertNode(int num)
     newNode->value = num;
     newNode->left = newNode->right = nullptr;
 
-    insert(root, newNode);   //Insert new node.
+    insert(root, newNode, level);   //Insert new node.
 }
 
 //Called by the destructor to delete all nodes in the tree.
@@ -159,6 +167,7 @@ void binaryTree::searchNode(int num)
 //Calls deleteNode to delete the node with the value passes into deleteNode.
 void binaryTree::remove(int num)
 {
+    this->maxHeight = 0; //If we delete a node we need to reset max height to zero for the next call of the treeHeight function.
     deleteNode(num, root);
 }
 
@@ -222,8 +231,8 @@ void binaryTree::displayInOrder(TreeNode *nodePtr) const
 {
     if(nodePtr)
     {
-      displayInOrder(nodePtr->left);
       cout<< nodePtr->value <<endl;
+      displayInOrder(nodePtr->left);
       displayInOrder(nodePtr->right);
     }
 }
@@ -242,30 +251,71 @@ void binaryTree::displayPreOrder(TreeNode *nodePtr) const
 //Display postorder travel.
 void binaryTree::displayPostOrder(TreeNode *nodePtr) const
 {
+
     if(nodePtr)
     {
       displayPostOrder(nodePtr->left);
       displayPostOrder(nodePtr->right);
       cout << nodePtr->value << endl;
     }
+
+}
+
+void binaryTree::heightSetterDriver(int setterValue = 1)
+{
+  heightSetter(root, setterValue);
+}
+void binaryTree::heightSetter(TreeNode *nodePtr, int setterValue)
+{
+  if(nodePtr)
+  {
+    nodePtr->height = setterValue;
+    setterValue += 1;
+    heightSetter(nodePtr->left,setterValue);
+    heightSetter(nodePtr->right,setterValue);
+  }
+
 }
 
 //Calling treeHeight recursively to find the height of the tree.
-int binaryTree::treeHeight(TreeNode *nodePtr)
+void binaryTree::treeHeight(TreeNode *nodePtr, int *maxHeightPtr)
 {
-  //cout<<"Being called";
-  if (nodePtr == nullptr)
+  if(nodePtr)
   {
-    //cout<<"Being called";
-    return 0;
-  }
-  else
-  {
-    int lb = treeHeight(nodePtr->left);
-    int rb = treeHeight(nodePtr->right);
-    return 1 + max(lb,rb);
-    //return max(treeHeight(nodePtr->left),treeHeight(nodePtr->right))+1;
+
+    if(nodePtr->height > this->maxHeight)
+    {
+      this->maxHeight = nodePtr->height;
+    }
+      treeHeight(nodePtr->left,maxHeightPtr);
+      treeHeight(nodePtr->right,maxHeightPtr);
   }
 
 }
+
+//Output the height of the tree.
+void binaryTree::getMaxHeight()
+{
+  heightSetterDriver();
+  treeHeight(root, maxHeightPtr);
+  cout<< this->maxHeight;
+}
+
+//Menu prompt for our users.
+void printMenu()
+{
+  cout<<"\n\n";
+  cout<<"********************************************************************************************************"<<endl;
+  cout<<"*                                                                                                      *"<<endl;
+  cout<<"*                                          Select an Option                                            *"<<endl;
+  cout<<"*                                                                                                      *"<<endl;
+  cout<<"*    1. Display Inorder                  2. Display Preorder                     3. Display Postorder  *"<<endl;
+  cout<<"*                                                                                                      *"<<endl;
+  cout<<"*    4. Print Tree Height                5. Search for Node                      6. Delete a Node      *"<<endl;
+  cout<<"*                                                                                                      *"<<endl;
+  cout<<"*                                        7. Select to Exit                                             *"<<endl;
+  cout<<"*                                                                                                      *"<<endl;
+  cout<<"********************************************************************************************************\n"<<endl;
+}
+
 #endif
