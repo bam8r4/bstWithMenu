@@ -231,8 +231,8 @@ void binaryTree::displayInOrder(TreeNode *nodePtr) const
 {
     if(nodePtr)
     {
-      cout<< nodePtr->value <<endl;
       displayInOrder(nodePtr->left);
+      cout<< nodePtr->value <<endl;
       displayInOrder(nodePtr->right);
     }
 }
