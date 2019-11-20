@@ -31,7 +31,7 @@ int main()
           break;
 
         case 2:
-          cout<<"\nPrinting tree PrOrder."<<endl;
+          cout<<"\nPrinting tree PreOrder."<<endl;
           tree.displayPreOrder();
           break;
 
